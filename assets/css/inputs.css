@@ -1,0 +1,14 @@
+table input[type="checkbox"], #nuxt-checkbox {
+  @apply !text-arapawa-500;
+  @apply !border-gray-400;
+  
+  width: 1rem !important;
+  height: 1rem !important;
+  /* color: #413fff !important; */
+  /* border: 1px solid #E5E7EB !important;  */
+}
+
+table input[type="checkbox"]:focus, #nuxt-checkbox {
+  outline: none !important;
+  box-shadow: 0 0 0 0.2rem transparent !important;
+}
