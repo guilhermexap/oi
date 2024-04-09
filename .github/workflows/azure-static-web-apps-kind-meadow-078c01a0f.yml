@@ -11,9 +11,9 @@ on:
 
 env:
   NODE_VERSION: '18.x'   
-  API_BASE_URL:https://teste-backend-backoffice-laravel.azurewebsites.net/api/v2
-  API_BASE_URL_SCHEDULE:https://testeappbackendlaravel.azurewebsites.net/api/v2
-  API_KEY:xOuWgoB1D9suLlfiey63mvsqKgobS/DfLLMQtIjDUhw=
+  API_BASE_URL: https://teste-backend-backoffice-laravel.azurewebsites.net/api/v2
+  API_BASE_URL_SCHEDULE: https://testeappbackendlaravel.azurewebsites.net/api/v2
+  API_KEY: xOuWgoB1D9suLlfiey63mvsqKgobS/DfLLMQtIjDUhw=
   IS_DEMO=1
   
 jobs:
