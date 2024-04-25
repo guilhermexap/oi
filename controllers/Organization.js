@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import organizationService from "../services/organization.service";
+import config from "../services/config.service";
 
 export const useOrganization = defineStore("Organization", {
   // state
@@ -22,6 +23,7 @@ export const useOrganization = defineStore("Organization", {
         this.organizations.push({
           index: element.NRORG,
           label: element.NAME.toUpperCase(),
+          isFirstTime: element.FIRST_TIME,
           description: "",
           icon: {
             component: "ni ni-mobile-button",
@@ -31,8 +33,13 @@ export const useOrganization = defineStore("Organization", {
       });
     },
 
-    setOrganization(NRORG) {
+    async setOrganization(NRORG, FIRST_TIME) {
       localStorage.setItem("NRORG", NRORG);
+      if (FIRST_TIME === null || FIRST_TIME === "true") {
+        await config.update({ FIRST_TIME: "false" }, NRORG);
+        localStorage.setItem("FIRST_TIME", "true");
+        return navigateTo("/configuracoes");
+      }
       navigateTo("/dashboards/default");
     },
   },

@@ -1,7 +1,13 @@
 <template>
-  <div class="py-12 container-fluid" style="background-color: #020059">
+  <div class="py-12 container-fluid relative" style="background-color: #020059">
     <div class="row justify-content-center">
       <div class="col-md-5">
+        <div
+          v-if="isLoading === true"
+          class="z-50 h-screen w-full flex justify-center items-center bg-[#020059] absolute inset-0 overflow-hidden"
+        >
+          <span class="fa fa-spinner animate-spin fa-2x text-white"></span>
+        </div>
         <div class="card">
           <div class="p-3 pb-0 card-header">
             <h6 class="mb-0">{{ organizationController.categoryTitle }}</h6>
@@ -14,7 +20,8 @@
                     icon: { component, background },
                     index,
                     label,
-                    description
+                    isFirstTime,
+                    description,
                   },
                   key
                 ) of organizationController.organizations"
@@ -43,7 +50,12 @@
                     <i
                       :class="`ni ${isRTL ? 'ni-bold-left' : 'ni-bold-right'}`"
                       aria-hidden="true"
-                      @click="organizationController.setOrganization(index)"
+                      @click="
+                        organizationController.setOrganization(
+                          index,
+                          isFirstTime
+                        )
+                      "
                     ></i>
                   </button>
                 </div>
@@ -56,17 +68,24 @@
   </div>
 </template>
 <script setup>
-import CategoriesList from "@/examples/cards/CategoriesList.vue";
+// import CategoriesList from "@/examples/cards/CategoriesList.vue";
 import { useOrganization } from "~~/controllers/Organization";
 
 definePageMeta({
   layout: false,
-  middleware: ["auth"]
+  middleware: ["auth"],
 });
 const organizationController = useOrganization();
 
+const isLoading = ref(false);
+
+const getData = async () => {
+  isLoading.value = true;
+  await organizationController.getOrganizations();
+  isLoading.value = false;
+};
+
 onMounted(() => {
-  organizationController.getOrganizations();
+  getData();
 });
 </script>
-  
