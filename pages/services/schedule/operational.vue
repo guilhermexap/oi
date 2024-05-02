@@ -371,6 +371,20 @@
       <i class="fa fa-sync animate-spin mb-2"></i>
       <span>Carregando...</span>
     </div>
+    <div
+      v-if="isEmpty === true"
+      class="absolute top-0 left-0 bg-white h-screen z-10 w-full flex flex-col items-center justify-center"
+    >
+      <span>Não existe reservas ainda</span>
+      <button
+        type="button"
+        title="Voltar"
+        class="hover:opacity-80 transition-opacity"
+        @click="backPage"
+      >
+        <i class="fa fa-arrow-left"></i> Voltar
+      </button>
+    </div>
     <div v-else>
       <div
         v-if="showOverlay"
@@ -730,6 +744,7 @@ const scheduleData = ref([]);
 const options = ref([]);
 const optionsUser = ref([]);
 const isLoading = ref(false);
+const isEmpty = ref(false);
 const isOpen = ref(false);
 const isOpenInfo = ref(false);
 const isOpenReserve = ref(false);
@@ -846,13 +861,17 @@ watch(
 
 const fetchOptions = async () => {
   const response = await scheduleServices.indexSpaces(NrOrg);
-  if (Array.isArray(response)) {
+  console.log(response.length > 0);
+  if (Array.isArray(response) && response.length > 0) {
     options.value = response.map(({ NAME, ID }) => ({
       label: NAME,
       value: ID,
     }));
+    state.SERVICE_ID = response[0].ID;
+  } else {
+    isLoading.value = false;
+    isEmpty.value = true;
   }
-  state.SERVICE_ID = response[0].ID;
 };
 
 // const fetchOptionsUser = async () => {
@@ -1142,6 +1161,7 @@ async function fetchData() {
   };
   if (state.SERVICE_ID !== undefined) {
     const response = await scheduleServices.getSchedule(data);
+    console.log(response);
     if (state.TIME_NOW === true) {
       const now = new Date();
       const currentHour = now.getHours();
