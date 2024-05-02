@@ -96,7 +96,7 @@
       </UTable>
 
       <!-- Number of rows & Pagination -->
-      <template #footer>
+      <template v-if="pageTotal" #footer>
         <div class="flex flex-wrap justify-between items-center">
           <div>
             <span class="text-sm leading-5">
