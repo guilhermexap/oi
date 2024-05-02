@@ -4,9 +4,11 @@
       <UModal v-model="isOpen">
         <div v-if="rowData" class="p-4 border">
           <h5 class="pb-2">Informações</h5>
-          <p v-if="rowData.CREATED_BY">Criado por {{ rowData.CREATED_BY }}</p>
-          <p v-if="rowData.MODIFIED_BY">
-            Modificado por {{ rowData.MODIFIED_BY }}
+          <p v-if="rowData.CREATED_BY_NAME">
+            Criado por {{ rowData.CREATED_BY_NAME }}
+          </p>
+          <p v-if="rowData.MODIFIED_BY_NAME">
+            Modificado por {{ rowData.MODIFIED_BY_NAME }}
           </p>
           <p v-if="rowData.CREATED_AT">
             Criado em {{ formatDate(rowData.CREATED_AT) }}
@@ -19,9 +21,7 @@
 
       <div class="flex justify-between items-center">
         <div class="col-8">
-          <h5 class="font-weight-bolder mb-0" style="padding: 1rem">
-            Marketing
-          </h5>
+          <h5 class="font-weight-bolder mb-0" style="padding: 1rem">Evento</h5>
         </div>
 
         <UButton
@@ -30,7 +30,7 @@
           size="xl"
           class="mr-2"
           @click="openNew"
-          >Adicionar marketing
+          >Adicionar evento
         </UButton>
       </div>
 
@@ -38,7 +38,7 @@
       <div
         class="flex items-center justify-between px-3 mt-4 py-3.5 border-b border-gray-200 dark:border-gray-700"
       >
-        <UInput v-model="q" placeholder="Filtrar marketing..." />
+        <UInput v-model="q" placeholder="Filtrar evento..." />
         <div class="flex gap-4">
           <UDropdown
             v-if="selectedRows.length > 0"
@@ -74,8 +74,8 @@
         <template #completed-data="{ row }">
           <UBadge
             size="xs"
-            :label="row.ACTIVE === '1' ? 'Ativo' : 'Inativo'"
-            :color="row.ACTIVE === '1' ? 'emerald' : 'orange'"
+            :label="row.STATUS === 'A' ? 'Ativo' : 'Inativo'"
+            :color="row.STATUS === 'A' ? 'emerald' : 'orange'"
             variant="subtle"
           />
         </template>
@@ -87,11 +87,11 @@
         </template>
 
         <template #INITIAL_DATE-data="{ row }"
-          >{{ formatDateWithoutHours(row.INITIAL_DATE) }}
+          >{{ formatDateWithoutSeconds(row.INITIAL_DATE) }}
         </template>
 
         <template #FINAL_DATE-data="{ row }"
-          >{{ formatDateWithoutHours(row.FINAL_DATE) }}
+          >{{ formatDateWithoutSeconds(row.FINAL_DATE) }}
         </template>
       </UTable>
 
@@ -111,6 +111,7 @@
           </div>
 
           <UPagination
+            v-if="pageTotal"
             v-model="page"
             :page-count="pageCount"
             :total="pageTotal"
@@ -123,10 +124,10 @@
 
 <script setup>
 import {
-  formatDateWithoutHours,
   formatDate,
+  formatDateWithoutSeconds,
 } from "~/services/date-formatter.service";
-// import event from "~/services/marketing.service";
+// import marketingService from "~/services/marketing.service";
 import newsServices from "~/services/news.service";
 import { setSelectedData } from "~/services/editService";
 const NumberOrg = localStorage.getItem("NRORG");
@@ -143,35 +144,14 @@ definePageMeta({
 });
 
 const openEdit = (row) => {
-  setSelectedData({
-    ID: row.ID,
-    TITLE: row.TITLE,
-    GEN_TAG_ID: row.GEN_TAG_ID,
-    INITIAL_DATE: row.INITIAL_DATE,
-    FINAL_DATE: row.FINAL_DATE,
-    IMAGE: row.IMAGE,
-    ACTIVE: row.ACTIVE,
-    LINK: row.LINK,
-    PRIORITY: row.PRIORITY,
-  });
+  setSelectedData(row);
   router.push({
-    name: "marketing-form",
-    // query: {
-    //   ID: row.ID,
-    //   TITLE: row.TITLE,
-    //   GEN_TAG_ID: row.GEN_TAG_ID,
-    //   INITIAL_DATE: row.INITIAL_DATE,
-    //   FINAL_DATE: row.FINAL_DATE,
-    //   IMAGE: row.IMAGE,
-    //   ACTIVE: row.ACTIVE,
-    //   LINK: row.LINK,
-    //   PRIORITY: row.PRIORITY,
-    // },
+    name: "events-form",
   });
 };
 
 const openNew = () => {
-  router.push({ name: "marketing-form" });
+  router.push({ name: "events-form" });
 };
 
 const openModal = (row) => {
@@ -186,8 +166,8 @@ const columns = [
     sortable: true,
   },
   {
-    key: "TITLE",
-    label: "Marketing",
+    key: "NAME",
+    label: "Evento",
     sortable: true,
   },
   {
@@ -258,12 +238,12 @@ const todoStatus = [
   {
     key: "uncompleted",
     label: "Inativo",
-    value: 2,
+    value: "I",
   },
   {
     key: "completed",
     label: "Ativo",
-    value: 1,
+    value: "A",
   },
 ];
 
@@ -284,17 +264,17 @@ const items = (row) => [
 const selectedStatus = ref([]);
 const searchStatus = computed(() => {
   if (selectedStatus.value?.length === 0) {
-    return "active=1";
+    return "status=A";
   }
   if (selectedStatus.value?.length === 2) {
     return "";
   }
-  return `active=${selectedStatus.value[0].value}`;
+  return `status=${selectedStatus.value[0].value}`;
 });
 
 // Pagination
 const page = ref(1);
-const pageCount = 5;
+const pageCount = 10;
 const pageTotal = ref(0);
 const pageFrom = computed(() => (page.value - 1) * pageCount + 1);
 const pageTo = computed(() =>
@@ -302,15 +282,12 @@ const pageTo = computed(() =>
 );
 
 const filteredRows = computed(() => {
-  pageTotal.value = todos.value.length;
+  pageTotal.value = todos.value.total;
   if (!q.value) {
-    return todos.value.slice(
-      (page.value - 1) * pageCount,
-      page.value * pageCount
-    );
+    return todos.value.data;
   }
 
-  return todos.value.filter((person) => {
+  return todos.value.data.filter((person) => {
     return Object.values(person).some((value) => {
       return String(value).toLowerCase().includes(q.value.toLowerCase());
     });
@@ -321,14 +298,20 @@ const filteredRows = computed(() => {
 const { data: todos, pending } = useLazyAsyncData(
   "todos",
   () =>
-    $fetch(`${apiBaseUrl}/marketing?nrorg=${NumberOrg}&${searchStatus.value}`, {
+    $fetch(`${apiBaseUrl}/events?nrorg=${NumberOrg}&${searchStatus.value}`, {
       headers: {
         Authorization: `${accessToken}`,
+      },
+      query: {
+        _page: page.value,
+        _limit: pageCount,
+        _sort: "ID",
+        _order: "desc",
       },
     }),
   {
     default: () => [],
-    watch: [searchStatus, pageTotal, listen],
+    watch: [page, searchStatus, pageTotal, listen],
   }
 );
 </script>

@@ -39,7 +39,7 @@
                 text="Comunicados"
               />
               <SidenavItem to="/marketing" mini-icon="M" text="Marketing" />
-              <!-- <SidenavItem to="/events" mini-icon="E" text="Eventos" /> -->
+              <SidenavItem to="/events" mini-icon="E" text="Eventos" />
             </ul>
           </template>
         </sidenav-collapse>

@@ -15,6 +15,22 @@ export const formatDate = (dateString) => {
   return date.toLocaleDateString("pt-BR", options);
 };
 
+export const formatDateWithoutSeconds = (dateString) => {
+  if (dateString === null) {
+    return "-";
+  }
+  const options = {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  };
+  const date = new Date(dateString);
+  return date.toLocaleDateString("pt-BR", options);
+};
+
 export const formatDateWithoutHours = (dateString) => {
   if (dateString === null) {
     return "-";

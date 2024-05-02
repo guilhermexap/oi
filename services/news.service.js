@@ -4,7 +4,7 @@ const toast = useToast();
 
 const getTags = async (nrorg) => {
   const accessToken = localStorage.getItem("authToken");
-  const response = await useFetch(`${apiBaseUrl}/news/tags?nrorg=${nrorg}`, {
+  const response = await useFetch(`${apiBaseUrl}/tags?nrorg=${nrorg}`, {
     method: "GET",
     headers: {
       Authorization: `${accessToken}`,
@@ -95,9 +95,9 @@ const convertToDate = (dateString) => {
 };
 
 const convertToBoolean = (value) => {
-  if (value === "1") {
+  if (value === "1" || value === "A") {
     return true;
-  } else if (value === "2") {
+  } else if (value === "2" || value === "I") {
     return false;
   } else {
     return undefined;

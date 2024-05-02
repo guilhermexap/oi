@@ -4,10 +4,16 @@
       <UModal v-model="isOpen">
         <div v-if="rowData" class="p-4 border">
           <h5 class="pb-2">Informações</h5>
-          <p>Criado por {{ rowData.CREATED_BY }}</p>
-          <p>Modificado por {{ rowData.MODIFIED_BY }}</p>
-          <p>Criado em {{ formatDate(rowData.CREATED_AT) }}</p>
-          <p>Modifcado em {{ formatDate(rowData.MODIFIED_AT) }}</p>
+          <p v-if="rowData.CREATED_BY">Criado por {{ rowData.CREATED_BY }}</p>
+          <p v-if="rowData.MODIFIED_BY">
+            Modificado por {{ rowData.MODIFIED_BY }}
+          </p>
+          <p v-if="rowData.CREATED_AT">
+            Criado em {{ formatDate(rowData.CREATED_AT) }}
+          </p>
+          <p v-if="rowData.MODIFIED_AT">
+            Modifcado em {{ formatDate(rowData.MODIFIED_AT) }}
+          </p>
         </div>
       </UModal>
 
@@ -116,7 +122,10 @@
 </template>
 
 <script setup>
-import { formatDateWithoutHours } from "~/services/date-formatter.service";
+import {
+  formatDateWithoutHours,
+  formatDate,
+} from "~/services/date-formatter.service";
 import newsService from "~/services/news.service";
 import { setSelectedData } from "~/services/editService";
 const NumberOrg = localStorage.getItem("NRORG");
