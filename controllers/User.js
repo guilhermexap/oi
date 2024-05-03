@@ -13,7 +13,7 @@ export const useUser = defineStore("User", {
         NRORG: null,
         STATUS: "A",
         GEN_USER_TYPE_ID: null,
-        APP_LAYOUT_CONFIG: null
+        APP_LAYOUT_CONFIG: null,
       },
       user: {
         ID: null,
@@ -30,12 +30,12 @@ export const useUser = defineStore("User", {
         GEN_USER_TYPE_ID: null,
         GROUP: {
           GEN_USER_GROUP_ID: null,
-          NRORG: localStorage.getItem("NRORG")
+          NRORG: localStorage.getItem("NRORG"),
         },
         CONTACT: {
           PHONE: "",
           NRORG: localStorage.getItem("NRORG"),
-          STATUS: "A"
+          STATUS: "A",
         },
         ADDRESS: {
           CEP: "",
@@ -49,9 +49,9 @@ export const useUser = defineStore("User", {
           CREATE_DATE: "",
           TYPE: "",
           COMPLEMENT: "",
-          STATUS: "A"
+          STATUS: "A",
         },
-        DEPENDENTS: []
+        DEPENDENTS: [],
       },
       title: "Usuário",
       genUserTypeId: null,
@@ -59,24 +59,29 @@ export const useUser = defineStore("User", {
         { label: "Nenhum", value: "0" },
         { label: "Masculino", value: "M" },
         { label: "Feminino", value: "F" },
-        { label: "Outro", value: "O" }
+        { label: "Outro", value: "O" },
       ],
       userTypes: [
         { label: "Membros", value: 1 },
-        { label: "Seguidores", value: 6 }
+        { label: "Seguidores", value: 6 },
       ],
       userGroups: [
         {
-          GEN_USER_GROUP_ID: null
-        }
-      ]
+          GEN_USER_GROUP_ID: null,
+        },
+      ],
     };
   },
 
   actions: {
-    async getGenUsers(userType) {
+    async getGenUsers(userType, page, pageCount, search) {
       this.users = [];
-      this.users = await userService.getGenUsers(userType);
+      this.users = await userService.getGenUsers(
+        userType,
+        page,
+        pageCount,
+        search
+      );
       await this.getGenUserGroups();
     },
 
@@ -96,7 +101,7 @@ export const useUser = defineStore("User", {
     async updateGenUser() {
       await userService.updateGenUser(this.user);
     },
-  
+
     async updateGenUserGroup() {
       await userService.updateGenUserGroup(this.user);
     },
@@ -123,7 +128,7 @@ export const useUser = defineStore("User", {
 
     async deleteItem(row, type) {
       const data = {
-        ID: row.ID
+        ID: row.ID,
       };
 
       if (type == "contact") {
@@ -142,7 +147,7 @@ export const useUser = defineStore("User", {
     },
 
     async filterAndMapperUseGroup() {
-      let result = [];
+      const result = [];
 
       this.userGroups
         .filter((group) => group.GEN_USER_TYPE_ID == this.genUserTypeId)
@@ -151,6 +156,6 @@ export const useUser = defineStore("User", {
         });
 
       return result;
-    }
-  }
+    },
+  },
 });

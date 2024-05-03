@@ -45,25 +45,37 @@
               {{
                 row.user_groups[0]
                   ? row.user_groups[0].gen_user_group.NAME
-                  : "não tem"
+                  : "não possui"
               }}
             </template>
             <template #PHONE-data="{ row }">
               {{ row.contacts[0] ? row.contacts[0].PHONE : "não possui" }}
             </template>
           </UTable>
-          <div
-            class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700"
-          >
-            <UPagination
-              v-if="pageTotal > 0"
-              v-model="page"
-              :page-count="pageCount"
-              :total="pageTotal"
-            />
-          </div>
         </div>
       </div>
+      <template #footer>
+        <div class="flex flex-wrap justify-between items-center">
+          <div v-if="pageTotal">
+            <span class="text-sm leading-5">
+              Mostrando
+              <span class="font-medium">{{ pageFrom }}</span>
+              a
+              <span class="font-medium">{{ pageTo }}</span>
+              de
+              <span class="font-medium">{{ pageTotal }}</span>
+              resultados
+            </span>
+          </div>
+
+          <UPagination
+            v-if="pageTotal"
+            v-model="page"
+            :page-count="pageCount"
+            :total="pageTotal"
+          />
+        </div>
+      </template>
     </UCard>
   </UContainer>
 </template>
@@ -80,17 +92,6 @@ const pageTotal = ref(0);
 
 definePageMeta({
   middleware: ["auth"],
-});
-
-onMounted(async () => {
-  pending.value = true;
-  userController.value = useUser();
-  await userController.value.getGenUsers(1);
-  users.value = await userController.value.users.data.filter(
-    (value) => value.user_types.length > 0
-  );
-  pageTotal.value = users.value.length;
-  pending.value = false;
 });
 
 const columns = [
@@ -119,21 +120,43 @@ const openFormNewUser = () => {
 };
 
 const page = ref(1);
-const pageCount = 300;
+const pageCount = 15;
+const pageFrom = computed(() => (page.value - 1) * pageCount + 1);
+const pageTo = computed(() =>
+  Math.min(page.value * pageCount, pageTotal.value)
+);
 
 const q = ref("");
 
 const filteredRows = computed(() => {
   if (!q.value) {
-    return users.value.slice(
-      (page.value - 1) * pageCount,
-      page.value * pageCount
-    );
+    return users.value;
   }
   return users.value.filter((user) => {
     return Object.values(user).some((value) => {
       return String(value).toLowerCase().includes(q.value.toLowerCase());
     });
   });
+});
+
+const fetchData = async () => {
+  pending.value = true;
+  userController.value = useUser();
+  await userController.value.getGenUsers(1, page.value, pageCount, "");
+  users.value = userController.value.users.data;
+  pageTotal.value = userController.value.users.total;
+  pending.value = false;
+};
+
+onMounted(() => {
+  fetchData();
+});
+
+watchEffect(() => {
+  // console.log(page.value);
+});
+
+watch([page, pageTotal], ([_newValue, _newValue2], [_oldValue, _oldValue2]) => {
+  fetchData();
 });
 </script>
