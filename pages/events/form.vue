@@ -29,7 +29,7 @@
               :disabled="isLoading"
             >
               <span v-if="isLoading" class="fa fa-spinner animate-spin" />
-              <span v-else>Publicar evento</span>
+              <span v-else>Salvar</span>
             </UButton>
           </div>
         </div>
@@ -386,7 +386,13 @@ async function onSubmit(_event: FormSubmitEvent<Schema>) {
     if (response) {
       dataEvtTags.EVT_EVENT_ID = response.ID;
       await eventService.postEtvTags(dataEvtTags);
-      router.push({ name: "events" });
+      isLoading.value = false;
+      router.push({
+        name: "events-ticket",
+        query: {
+          ID: response.ID,
+        },
+      });
     } else {
       isLoading.value = false;
     }

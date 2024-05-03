@@ -8,10 +8,6 @@
         <i class="ni ni-shop text-primary text-sm opacity-10"></i>
         <SidenavItem to="/dashboards/default" mini-icon="H" text="Home" />
       </li>
-      <li class="nav-item d-flex align-items-center px-2 mx-4">
-        <i class="ni ni-settings-gear-65 text-primary text-sm opacity-10"></i>
-        <SidenavItem to="/configuracoes" mini-icon="C" text="Configurações" />
-      </li>
 
       <!-- <li class="nav-item d-flex align-items-center px-2 mx-4">
         <i class="ni ni-collection text-primary text-sm opacity-10"></i>
@@ -152,6 +148,15 @@
             </ul>
           </template>
         </sidenav-collapse>
+      </li>
+
+      <li class="nav-item d-flex align-items-center px-2 mx-4">
+        <i class="ni ni-settings-gear-65 text-primary text-sm opacity-10"></i>
+        <SidenavItem
+          to="/configuracoes"
+          mini-icon="C"
+          text="Configurações da comunidade"
+        />
       </li>
 
       <!-- <li class="nav-item d-flex align-items-center px-2">

@@ -172,12 +172,12 @@ const columns = [
   },
   {
     key: "INITIAL_DATE",
-    label: "Início da veiculação",
+    label: "Horário inicial",
     sortable: true,
   },
   {
     key: "FINAL_DATE",
-    label: "Final da veiculação",
+    label: "Horário final",
     sortable: true,
   },
   {
