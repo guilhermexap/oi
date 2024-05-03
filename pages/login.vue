@@ -7,12 +7,7 @@
         :dark-mode="false"
       />
     </template>
-    <div
-      class="page-header min-vh-100"
-      style="
-        background-image: url('https://i.ibb.co/whQckm0/Background-Image.png');
-      "
-    >
+    <div class="page-header min-vh-100" :style="headerStyle">
       <span class="mask bg-gradient-dark opacity-6"></span>
       <div class="container mt-8 mb-4">
         <div class="row justify-content-center">
@@ -120,10 +115,12 @@
 import { useVuelidate } from "@vuelidate/core";
 import { required, email, helpers } from "@vuelidate/validators";
 import { useRouter } from "vue-router";
+import bgImage from "@/assets/background.jpeg";
 import FooterCentered from "@/examples/Footer/Centered.vue";
 import NavbarAuthentication from "@/examples/Navbar/Authentication.vue";
 import { useAuthStore } from "~~/stores/AuthStore";
 import { getErrorMessage, isError } from "~~/helpers/errorHandler";
+
 definePageMeta({
   layout: false,
   middleware: ["guest"],
@@ -134,6 +131,10 @@ const formData = reactive({});
 const errorsRef = reactive([]);
 const toast = useToast();
 const isLoading = ref(false);
+
+const headerStyle = {
+  backgroundImage: `url(${bgImage})`,
+};
 
 const rules = computed(() => {
   return {
