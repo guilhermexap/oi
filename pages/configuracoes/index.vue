@@ -13,7 +13,14 @@
         </div>
       </div>
     </UModal>
-    <UCard>
+    <UCard class="relative">
+      <div
+        v-if="loading"
+        class="absolute top-0 left-0 bg-white/80 h-full z-10 w-full flex flex-col items-center overflow-hidden"
+      >
+        <i class="fa fa-sync animate-spin mb-2 mt-96"></i>
+        <span>Carregando...</span>
+      </div>
       <UForm
         :schema="schema"
         :state="state"
@@ -132,7 +139,7 @@
           </UFormGroup>
 
           <h5 class="py-3.5 border-b border-gray-200 dark:border-gray-700 mt-3">
-            SMTP
+            SMTP (Configurações de envio de e-mail)
           </h5>
           <div class="py-4 flex gap-4 flex-col col-span-3">
             <UFormGroup label="HOST" name="PRIMARY_COLOR">
@@ -156,8 +163,8 @@
 
 <script setup lang="ts">
 import { number, object, string, type InferType } from "yup";
-import { ColorPicker } from "vue3-colorpicker";
 import type { FormSubmitEvent } from "#ui/types";
+import { ColorPicker } from "vue3-colorpicker";
 import config from "~/services/config.service";
 import "vue3-colorpicker/style.css";
 
@@ -167,6 +174,7 @@ const UsrId = localStorage.getItem("userId");
 const NrOrg = parseInt(NumberOrg!);
 const UserId = parseInt(UsrId!);
 const isLoading = ref(false);
+const loading = ref(false);
 const isOpen = ref(false);
 const router = useRouter();
 
@@ -225,8 +233,10 @@ onMounted(async () => {
     isOpen.value = true;
   }
   try {
+    loading.value = true;
     const response: any = await config.indexGenOrganization(NrOrg);
     if (response) {
+      loading.value = false;
       state.NAME = response.NAME;
       state.CNPJ = response.CNPJ;
       state.TYPE = response.TYPE;
@@ -241,6 +251,8 @@ onMounted(async () => {
       state.HOST_FROM_NAME = response.gen_configuration.HOST_FROM_NAME;
     }
   } catch (error) {
+    loading.value = false;
+
     console.error("error getting organization data:", error);
   }
 });

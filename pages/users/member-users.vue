@@ -45,7 +45,7 @@
               {{
                 row.user_groups[0]
                   ? row.user_groups[0].gen_user_group.NAME
-                  : "não possui"
+                  : "-"
               }}
             </template>
             <template #PHONE-data="{ row }">
