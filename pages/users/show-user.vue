@@ -267,7 +267,6 @@ const state = reactive({
 
 onMounted(async () => {
   await userController.getUser().then((rsp) => {
-    // console.log(rsp);
     if (rsp.user_groups.length) {
       rsp.GROUP = {
         GEN_USER_GROUP_ID: rsp.user_groups[0]?.GEN_USER_GROUP_ID,

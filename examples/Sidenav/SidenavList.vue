@@ -129,6 +129,7 @@
                 mini-icon="R"
                 text="Reserva de Profissionais"
               />
+              <SidenavItem to="/structures/" mini-icon="U" text="Unidades" />
               <SidenavItem to="/services/spaces" mini-icon="E" text="Espaços" />
               <SidenavItem
                 to="/services/appmenu"
