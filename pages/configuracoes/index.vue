@@ -196,15 +196,13 @@ const closeModal = () => {
 const schema = object({
   TYPE: number().required("Selecione um tipo").typeError("Valor inválido"),
   NAME: string().required("O nome deve ser preenchido"),
-  NICK_NAME: string().required("O apelido deve ser preenchido"),
-  CNPJ: string()
-    .required("O CNPJ deve ser preenchido")
-    .test("test-invalid-cnpj", "CNPJ inválido", (cnpj) => {
-      if (cnpj) {
-        return config.validateCNPJ(cnpj);
-      }
-      return true;
-    }),
+  NICK_NAME: string(),
+  CNPJ: string().test("test-invalid-cnpj", "CNPJ inválido", (cnpj) => {
+    if (cnpj) {
+      return config.validateCNPJ(cnpj);
+    }
+    return true;
+  }),
 });
 
 type Schema = InferType<typeof schema>;
