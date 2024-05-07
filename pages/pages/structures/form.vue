@@ -123,7 +123,7 @@ const schema = object({
   STREET: string().required("A rua deve ser preenchida"),
   STREET_NUMBER: string().required("O número deve ser preenchido"),
   NEIGHBORHOOD: string().required("O bairro deve ser preenchido"),
-  CITY: string().required("A classificação deve ser preenchida"),
+  CITY: string().required("A cidade deve ser preenchida"),
   PROVINCY: string().required("O estado deve ser preenchido"),
   CEP: string().required("O cep deve ser preenchido"),
   NRORG: number().default(NrOrg),
@@ -209,9 +209,5 @@ async function onSubmit(_event: FormSubmitEvent<Schema>) {
   }
 }
 
-onMounted(() => {
-  // fetchData();
-  // const str = "12";
-  // selected.value = str.split(",").map(Number);
-});
+onMounted(() => {});
 </script>
