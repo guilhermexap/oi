@@ -16,6 +16,7 @@
               type="button"
               color="primary"
               size="xl"
+              :disabled="pending"
               @click="openFormNewUser"
               >Novo
             </UButton>
@@ -45,7 +46,7 @@
               {{
                 row.user_groups[0]
                   ? row.user_groups[0].gen_user_group.NAME
-                  : "não possui"
+                  : "-"
               }}
             </template>
             <template #PHONE-data="{ row }">

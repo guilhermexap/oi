@@ -16,6 +16,7 @@
               type="submit"
               color="primary"
               size="xl"
+              :disabled="pending"
               @click.prevent="openFormNewUser()"
               >Novo
             </UButton>
@@ -113,7 +114,7 @@ const showUser = (row) => {
 };
 
 const openFormNewUser = () => {
-  userController.value.setTitle("Membro");
+  userController.value.setTitle("Seguidor");
   userController.value.genUserTypeId = 1;
 
   router.push({ name: "users-create-user" });
