@@ -106,7 +106,17 @@
                 <span v-if="!state.IMAGE" class="fa fa-image fa-3x"></span>
               </div>
               <UFormGroup label="Url da imagem" name="IMAGE">
-                <UInput v-model="state.IMAGE" />
+                <div class="flex gap-2 items-center justify-center">
+                  <UInput v-model="state.IMAGE" class="flex-grow relative" />
+                  <div
+                    v-if="state.IMAGE"
+                    class="flex text-red-600 items-center bg-white p-1 h-full justify-center rounded-r-md cursor-pointer absolute top-0 right-0 hover:text-red-500 transition-opacity"
+                    title="Remover imagem"
+                    @click="state.IMAGE = undefined"
+                  >
+                    <i class="fa fa-close p-1"></i>
+                  </div>
+                </div>
               </UFormGroup>
             </div>
           </div>
