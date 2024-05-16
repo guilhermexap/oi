@@ -340,7 +340,6 @@ definePageMeta({
 });
 
 const userController = useUser();
-await userController.getGenUsers(1);
 
 const dependents = ref(
   userController.users.data.map((user) => ({
@@ -350,9 +349,10 @@ const dependents = ref(
 );
 const userGroups = await userController.filterAndMapperUseGroup();
 
-onMounted(() => {
+onMounted(async () => {
   document.getElementById("modal" + 1).style.display = "contents";
-  user.GEN_USER_TYPE_ID = userController.genUserTypeId;
+  await userController.getGenUsers(1, 1, 15, "");
+  // user.GEN_USER_TYPE_ID = userController.genUserTypeId;
 });
 
 const createGenUser = () => {
