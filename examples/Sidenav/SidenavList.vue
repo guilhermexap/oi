@@ -1,8 +1,5 @@
 <template>
-  <div
-    id="sidenav-collapse-main"
-    class="collapse navbar-collapse w-auto h-auto h-100"
-  >
+  <div>
     <ul class="navbar-nav">
       <li class="nav-item d-flex align-items-center px-2 mx-4">
         <i class="ni ni-shop text-primary text-sm opacity-10"></i>
@@ -29,12 +26,34 @@
           </template>
           <template #list>
             <ul class="nav ms-4">
+              <!-- <SidenavItem
+                to="/comunicacoes"
+                mini-icon="C"
+                text="Comunicações"
+              /> -->
               <SidenavItem
                 to="/announcements"
                 mini-icon="C"
                 text="Comunicados"
               />
               <SidenavItem to="/marketing" mini-icon="M" text="Marketing" />
+              <!-- <SidenavItem to="/events" mini-icon="E" text="Eventos" /> -->
+            </ul>
+          </template>
+        </sidenav-collapse>
+      </li>
+
+      <li class="nav-item">
+        <sidenav-collapse
+          collapse-ref="apiExamples"
+          nav-text="Eventos"
+          :class="getRoute === 'examples' ? 'active' : ''"
+        >
+          <template #icon>
+            <i class="fab fa-vuejs text-success text-sm opacity-10"></i>
+          </template>
+          <template #list>
+            <ul class="nav ms-4">
               <SidenavItem to="/events" mini-icon="E" text="Eventos" />
             </ul>
           </template>
@@ -129,7 +148,7 @@
                 mini-icon="R"
                 text="Reserva de Profissionais"
               />
-              <SidenavItem to="/structures/" mini-icon="U" text="Unidades" />
+
               <SidenavItem to="/services/spaces" mini-icon="E" text="Espaços" />
               <SidenavItem
                 to="/services/appmenu"
@@ -151,13 +170,26 @@
         </sidenav-collapse>
       </li>
 
-      <li class="nav-item d-flex align-items-center px-2 mx-4">
-        <i class="ni ni-settings-gear-65 text-primary text-sm opacity-10"></i>
-        <SidenavItem
-          to="/configuracoes"
-          mini-icon="C"
-          text="Configurações da comunidade"
-        />
+      <li class="nav-item">
+        <sidenav-collapse
+          collapse-ref="apiExamples"
+          nav-text="Configurações"
+          :class="getRoute === 'examples' ? 'active' : ''"
+        >
+          <template #icon>
+            <i class="fab fa-vuejs text-success text-sm opacity-10"></i>
+          </template>
+          <template #list>
+            <ul class="nav ms-4">
+              <SidenavItem
+                to="/configuracoes"
+                mini-icon="C"
+                text="Config. da comunidade"
+              />
+              <SidenavItem to="/structures/" mini-icon="U" text="Unidades" />
+            </ul>
+          </template>
+        </sidenav-collapse>
       </li>
 
       <!-- <li class="nav-item d-flex align-items-center px-2">
