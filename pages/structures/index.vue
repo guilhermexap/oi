@@ -162,11 +162,6 @@ const openModal = (row) => {
 
 const columns = [
   {
-    key: "ID",
-    label: "ID",
-    sortable: true,
-  },
-  {
     key: "NAME",
     label: "Nome",
     sortable: true,

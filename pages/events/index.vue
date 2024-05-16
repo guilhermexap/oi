@@ -21,7 +21,7 @@
 
       <div class="flex justify-between items-center">
         <div class="col-8">
-          <h5 class="font-weight-bolder mb-0" style="padding: 1rem">Evento</h5>
+          <h5 class="font-weight-bolder mb-0" style="padding: 1rem">Eventos</h5>
         </div>
 
         <UButton
@@ -160,11 +160,6 @@ const openModal = (row) => {
 };
 
 const columns = [
-  {
-    key: "ID",
-    label: "ID",
-    sortable: true,
-  },
   {
     key: "NAME",
     label: "Evento",

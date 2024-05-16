@@ -13,10 +13,10 @@
             style="float: right"
           >
             <UButton
-              type="submit"
+              type="button"
               color="primary"
               size="xl"
-              @click.prevent="openFormNewUser()"
+              @click="openFormNewUser"
               >Novo
             </UButton>
           </div>
@@ -45,7 +45,7 @@
               {{
                 row.user_groups[0]
                   ? row.user_groups[0].gen_user_group.NAME
-                  : "-"
+                  : "não possui"
               }}
             </template>
             <template #PHONE-data="{ row }">
@@ -95,7 +95,7 @@ definePageMeta({
 });
 
 const columns = [
-  { key: "ID", label: "ID" },
+  // { key: "ID", label: "ID" },
   { key: "FIRST_NAME", label: "NOME" },
   { key: "USER_TYPE", label: "TIPO DE MEMBRO" },
   { key: "EMAIL", label: "E-MAIL" },
@@ -115,8 +115,7 @@ const showUser = (row) => {
 const openFormNewUser = () => {
   userController.value.setTitle("Membro");
   userController.value.genUserTypeId = 1;
-
-  router.push({ name: "users-create-user" });
+  return router.push({ name: "users-create-user" });
 };
 
 const page = ref(1);

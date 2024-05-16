@@ -178,11 +178,6 @@ const openModal = (row) => {
 
 const columns = [
   {
-    key: "ID",
-    label: "ID",
-    sortable: true,
-  },
-  {
     key: "TITLE",
     label: "Comunicado",
     sortable: true,
@@ -299,7 +294,11 @@ const pageTo = computed(() =>
 );
 
 const filteredRows = computed(() => {
+  if (!Array.isArray(todos.value)) {
+    return [];
+  }
   pageTotal.value = todos.value.length;
+
   if (!q.value) {
     return todos.value.slice(
       (page.value - 1) * pageCount,

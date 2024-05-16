@@ -45,7 +45,7 @@
               {{
                 row.user_groups[0]
                   ? row.user_groups[0].gen_user_group.NAME
-                  : "não possui"
+                  : "-"
               }}
             </template>
             <template #PHONE-data="{ row }">
@@ -95,7 +95,7 @@ definePageMeta({
 });
 
 const columns = [
-  { key: "ID", label: "ID" },
+  // { key: "ID", label: "ID" },
   { key: "FIRST_NAME", label: "NOME" },
   { key: "USER_TYPE", label: "TIPO DE MEMBRO" },
   { key: "EMAIL", label: "E-MAIL" },

@@ -281,10 +281,10 @@ definePageMeta({
 // };
 
 const columns = [
-  {
-    key: "ID",
-    label: "SOLICITAÇÃO",
-  },
+  // {
+  //   key: "ID",
+  //   label: "SOLICITAÇÃO",
+  // },
   {
     key: "FULL_NAME",
     label: "USUÁRIO",
