@@ -9,7 +9,7 @@ export const useOrganization = defineStore("Organization", {
       organizationUser: [],
       organizations: [],
       NRORG: null,
-      categoryTitle: "Selecione Sua Organização",
+      categoryTitle: "Selecione Sua Comunidade",
     };
   },
 
