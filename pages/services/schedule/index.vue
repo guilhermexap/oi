@@ -533,7 +533,7 @@ const fetchOptions = async () => {
 };
 
 const fetchOptionsUser = async () => {
-  const response = await userService.getGenUsers(1);
+  const response = await userService.getGenUsers(1, 1, 15, "");
   if (Array.isArray(response.data)) {
     optionsUser.value = response.data.map(
       ({ FULL_NAME, ID, FIRST_NAME, LAST_NAME }) => ({
