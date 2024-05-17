@@ -7,7 +7,7 @@
           <p>Criado por {{ rowData.CREATED_BY }}</p>
           <p>Modificado por {{ rowData.MODIFIED_BY }}</p>
           <p>Criado em {{ formatDate(rowData.CREATED_AT) }}</p>
-          <p>Modifcado em {{ formatDate(rowData.MODIFIED_AT) }}</p>
+          <p>Modificado em {{ formatDate(rowData.MODIFIED_AT) }}</p>
         </div>
       </UModal>
 

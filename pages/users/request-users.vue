@@ -14,7 +14,7 @@
             {{ dateFormatterService.formatDate(rowDataInfo.CREATED_AT) }}
           </p>
           <p v-if="rowDataInfo.MODIFIED_AT">
-            Modifcado em
+            Modificado em
             {{ dateFormatterService.formatDate(rowDataInfo.MODIFIED_AT) }}
           </p>
         </div>

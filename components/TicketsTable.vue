@@ -227,7 +227,7 @@
         Criado em {{ dateServices.formatDate(rowData.CREATED_AT) }}
       </p>
       <p v-if="rowData.MODIFIED_AT">
-        Modifcado em {{ dateServices.formatDate(rowData.MODIFIED_AT) }}
+        Modificado em {{ dateServices.formatDate(rowData.MODIFIED_AT) }}
       </p>
     </div>
   </UModal>

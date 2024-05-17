@@ -10,7 +10,7 @@
           </p>
           <p>Criado em {{ formatDate(rowData.CREATED_AT) }}</p>
           <p v-if="rowData.MODIFIED_AT">
-            Modifcado em {{ formatDate(rowData.MODIFIED_AT) }}
+            Modificado em {{ formatDate(rowData.MODIFIED_AT) }}
           </p>
         </div>
       </UModal>
