@@ -96,7 +96,7 @@
       </UTable>
 
       <!-- Number of rows & Pagination -->
-      <template #footer>
+      <template v-if="pageTotal" #footer>
         <div class="flex flex-wrap justify-between items-center">
           <div>
             <span class="text-sm leading-5">
@@ -111,6 +111,7 @@
           </div>
 
           <UPagination
+            v-if="pageTotal"
             v-model="page"
             :page-count="pageCount"
             :total="pageTotal"
@@ -143,17 +144,7 @@ definePageMeta({
 });
 
 const openEdit = (row) => {
-  setSelectedData({
-    ID: row.ID,
-    TITLE: row.TITLE,
-    GEN_TAG_ID: row.GEN_TAG_ID,
-    INITIAL_DATE: row.INITIAL_DATE,
-    FINAL_DATE: row.FINAL_DATE,
-    IMAGE: row.IMAGE,
-    ACTIVE: row.ACTIVE,
-    LINK: row.LINK,
-    PRIORITY: row.PRIORITY,
-  });
+  setSelectedData(row);
   router.push({
     name: "marketing-form",
     // query: {
@@ -279,17 +270,17 @@ const items = (row) => [
 const selectedStatus = ref([]);
 const searchStatus = computed(() => {
   if (selectedStatus.value?.length === 0) {
-    return "active=1";
+    return "status=1";
   }
   if (selectedStatus.value?.length === 2) {
     return "";
   }
-  return `active=${selectedStatus.value[0].value}`;
+  return `status=${selectedStatus.value[0].value}`;
 });
 
 // Pagination
 const page = ref(1);
-const pageCount = 5;
+const pageCount = 10;
 const pageTotal = ref(0);
 const pageFrom = computed(() => (page.value - 1) * pageCount + 1);
 const pageTo = computed(() =>
@@ -297,18 +288,12 @@ const pageTo = computed(() =>
 );
 
 const filteredRows = computed(() => {
-  if (!Array.isArray(todos.value)) {
-    return [];
-  }
-  pageTotal.value = todos.value.length;
+  pageTotal.value = todos.value.total;
   if (!q.value) {
-    return todos.value.slice(
-      (page.value - 1) * pageCount,
-      page.value * pageCount
-    );
+    return todos.value.data;
   }
 
-  return todos.value.filter((person) => {
+  return todos.value.data.filter((person) => {
     return Object.values(person).some((value) => {
       return String(value).toLowerCase().includes(q.value.toLowerCase());
     });
@@ -319,14 +304,23 @@ const filteredRows = computed(() => {
 const { data: todos, pending } = useLazyAsyncData(
   "todos",
   () =>
-    $fetch(`${apiBaseUrl}/marketing?nrorg=${NumberOrg}&${searchStatus.value}`, {
-      headers: {
-        Authorization: `${accessToken}`,
-      },
-    }),
+    $fetch(
+      `${apiBaseUrl}/news?nrorg=${NumberOrg}&type=M&${searchStatus.value}`,
+      {
+        headers: {
+          Authorization: `${accessToken}`,
+        },
+        query: {
+          _page: page.value,
+          _limit: pageCount,
+          _sort: "ID",
+          _order: "desc",
+        },
+      }
+    ),
   {
     default: () => [],
-    watch: [searchStatus, pageTotal, listen],
+    watch: [page, searchStatus, pageTotal, listen],
   }
 );
 </script>

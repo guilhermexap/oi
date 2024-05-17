@@ -4,9 +4,11 @@
       <UModal v-model="isOpen">
         <div v-if="rowData" class="p-4 border">
           <h5 class="pb-2">Informações</h5>
-          <p v-if="rowData.CREATED_BY">Criado por {{ rowData.CREATED_BY }}</p>
-          <p v-if="rowData.MODIFIED_BY">
-            Modificado por {{ rowData.MODIFIED_BY }}
+          <p v-if="rowData.CREATED_BY_NAME">
+            Criado por {{ rowData.CREATED_BY_NAME }}
+          </p>
+          <p v-if="rowData.MODIFIED_BY_NAME">
+            Modificado por {{ rowData.MODIFIED_BY_NAME }}
           </p>
           <p v-if="rowData.CREATED_AT">
             Criado em {{ formatDate(rowData.CREATED_AT) }}
@@ -96,7 +98,7 @@
       </UTable>
 
       <!-- Number of rows & Pagination -->
-      <template #footer>
+      <template v-if="pageTotal" #footer>
         <div class="flex flex-wrap justify-between items-center">
           <div>
             <span class="text-sm leading-5">
@@ -111,6 +113,7 @@
           </div>
 
           <UPagination
+            v-if="pageTotal"
             v-model="page"
             :page-count="pageCount"
             :total="pageTotal"
@@ -142,16 +145,7 @@ definePageMeta({
 });
 
 const openEdit = (row) => {
-  setSelectedData({
-    ID: row.ID,
-    TITLE: row.TITLE,
-    IMAGE: row.IMAGE,
-    ACTIVE: row.ACTIVE,
-    INITIAL_DATE: row.INITIAL_DATE,
-    FINAL_DATE: row.FINAL_DATE,
-    GEN_NEWS: row.NEWS,
-    GEN_TAG_ID: row.GEN_TAG_ID,
-  });
+  setSelectedData(row);
   router.push({
     name: "announcements-form",
     // query: {
@@ -276,17 +270,17 @@ const items = (row) => [
 const selectedStatus = ref([]);
 const searchStatus = computed(() => {
   if (selectedStatus.value?.length === 0) {
-    return "active=1";
+    return "status=1";
   }
   if (selectedStatus.value?.length === 2) {
     return "";
   }
-  return `active=${selectedStatus.value[0].value}`;
+  return `status=${selectedStatus.value[0].value}`;
 });
 
 // Pagination
 const page = ref(1);
-const pageCount = 5;
+const pageCount = 10;
 const pageTotal = ref(0);
 const pageFrom = computed(() => (page.value - 1) * pageCount + 1);
 const pageTo = computed(() =>
@@ -294,19 +288,12 @@ const pageTo = computed(() =>
 );
 
 const filteredRows = computed(() => {
-  if (!Array.isArray(todos.value)) {
-    return [];
-  }
-  pageTotal.value = todos.value.length;
-
+  pageTotal.value = todos.value.total;
   if (!q.value) {
-    return todos.value.slice(
-      (page.value - 1) * pageCount,
-      page.value * pageCount
-    );
+    return todos.value.data;
   }
 
-  return todos.value.filter((person) => {
+  return todos.value.data.filter((person) => {
     return Object.values(person).some((value) => {
       return String(value).toLowerCase().includes(q.value.toLowerCase());
     });
@@ -321,10 +308,16 @@ const { data: todos, pending } = useLazyAsyncData(
       headers: {
         Authorization: `${accessToken}`,
       },
+      query: {
+        _page: page.value,
+        _limit: pageCount,
+        _sort: "ID",
+        _order: "desc",
+      },
     }),
   {
     default: () => [],
-    watch: [searchStatus, pageTotal, listen],
+    watch: [page, searchStatus, pageTotal, listen],
   }
 );
 </script>

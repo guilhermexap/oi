@@ -43,11 +43,16 @@
                 <UInput v-model="state.TITLE" />
               </UFormGroup>
 
-              <UFormGroup label="tags" name="GEN_TAG_ID">
-                <USelect
-                  v-model="state.GEN_TAG_ID"
+              <UFormGroup label="Tags" name="GEN_TAG">
+                <USelectMenu
+                  v-model="selected"
                   placeholder="Selecione..."
+                  searchable
+                  multiple
                   :options="options"
+                  option-attribute="label"
+                  value-attribute="value"
+                  selected-icon="fa fa-check"
                 />
               </UFormGroup>
               <div class="flex w-full gap-3">
@@ -130,7 +135,7 @@
 import { date, number, object, string, type InferType } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
 import newsServices from "~/services/news.service";
-import marketingServices from "~/services/marketing.service";
+// import marketingServices from "~/services/marketing.service";
 import { getSelectedData, setSelectedData } from "~/services/editService";
 const NumberOrg = localStorage.getItem("NRORG");
 const UsrId = localStorage.getItem("userId");
@@ -138,6 +143,7 @@ const NrOrg = parseInt(NumberOrg!);
 const UserId = parseInt(UsrId!);
 const isLoading = ref(false);
 const selectedData = ref<any>(getSelectedData());
+const selected = ref<number[]>([]);
 const options = ref<{ label: string; value: number }[]>([]);
 // const route = useRoute();
 
@@ -170,6 +176,7 @@ const schema = object({
   LINK: string().required("O link deve ser preenchido"),
   NRORG: number().default(NrOrg),
   USER_ID: number().default(UserId),
+  TYPE: string().default("N"),
 });
 
 type Schema = InferType<typeof schema>;
@@ -202,6 +209,11 @@ onMounted(async () => {
       value: ID,
     }));
   }
+  if (selectedData.value && selectedData.value.evt_tag_news.length > 0) {
+    for (let i = 0; i < selectedData.value.evt_tag_news.length; i++) {
+      selected.value.push(selectedData.value.evt_tag_news[i].EVT_TAG_ID);
+    }
+  }
 });
 
 onBeforeUnmount(() => {
@@ -211,19 +223,31 @@ onBeforeUnmount(() => {
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   event.data.ACTIVE = newsServices.convertToString(state.ACTIVE); // CONVERTE O ACTIVE PARA 1 OU 2 EM STRING
   isLoading.value = true;
+  const dataEvtTags = {
+    TAG_IDS: selected.value,
+    GEN_NEWS_ID: selectedData.value?.ID,
+    NRORG: NrOrg,
+    CREATED_BY: UserId,
+  };
   if (selectedData.value?.ID === undefined) {
-    const response = await marketingServices.postMarketing(event.data);
+    event.data.TYPE = "M";
+    const response: any = await newsServices.postNews(event.data);
     if (response) {
+      dataEvtTags.GEN_NEWS_ID = response.ID;
+      await newsServices.postEtvTags(dataEvtTags);
+      isLoading.value = false;
       router.push({ name: "marketing" });
     } else {
       isLoading.value = false;
     }
   } else {
-    const response = await marketingServices.updateMarketing(
+    const response = await newsServices.updateNews(
       event.data,
       selectedData.value?.ID
     );
     if (response) {
+      await newsServices.postEtvTags(dataEvtTags);
+      isLoading.value = false;
       router.push({ name: "marketing" });
     } else {
       isLoading.value = false;

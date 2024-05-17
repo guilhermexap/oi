@@ -43,11 +43,16 @@
                 <UInput v-model="state.TITLE" />
               </UFormGroup>
 
-              <UFormGroup label="tags" name="GEN_TAG_ID">
-                <USelect
-                  v-model="state.GEN_TAG_ID"
+              <UFormGroup label="Tags" name="GEN_TAG">
+                <USelectMenu
+                  v-model="selected"
                   placeholder="Selecione..."
+                  searchable
+                  multiple
                   :options="options"
+                  option-attribute="label"
+                  value-attribute="value"
+                  selected-icon="fa fa-check"
                 />
               </UFormGroup>
               <div class="flex w-full gap-3">
@@ -140,6 +145,7 @@ const options = ref<{ label: string; value: number }[]>([]);
 let titlePage = "Adicionar";
 
 const selectedData = ref<any>(getSelectedData());
+const selected = ref<number[]>([]);
 
 definePageMeta({
   middleware: ["auth"],
@@ -158,7 +164,6 @@ const backPage = () => {
 
 const schema = object({
   TITLE: string().required("O título deve ser preenchido"),
-  // GEN_TAG_ID: number().required("Selecione uma opção"),
   INITIAL_DATE: date().required("A data inicial deve ser preenchida"),
   FINAL_DATE: date().required("A data final deve ser preenchida"),
   NEWS: string().required("O conteúdo deve ser preenchido"),
@@ -197,6 +202,12 @@ onMounted(async () => {
       value: ID,
     }));
   }
+  if (selectedData.value && selectedData.value.evt_tag_news.length > 0) {
+    console.log("HREE");
+    for (let i = 0; i < selectedData.value.evt_tag_news.length; i++) {
+      selected.value.push(selectedData.value.evt_tag_news[i].EVT_TAG_ID);
+    }
+  }
 });
 
 onBeforeUnmount(() => {
@@ -206,9 +217,19 @@ onBeforeUnmount(() => {
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   event.data.ACTIVE = newsServices.convertToString(state.ACTIVE); // CONVERTE O ACTIVE PARA 1 OU 2 EM STRING
   isLoading.value = true;
+  const dataEvtTags = {
+    TAG_IDS: selected.value,
+    GEN_NEWS_ID: selectedData.value?.ID,
+    NRORG: NrOrg,
+    CREATED_BY: UserId,
+  };
   if (selectedData.value?.ID === undefined) {
-    const response = await newsServices.postNews(event.data);
+    const response: any = await newsServices.postNews(event.data);
     if (response) {
+      dataEvtTags.GEN_NEWS_ID = response.ID;
+      await newsServices.postEtvTags(dataEvtTags);
+      isLoading.value = false;
+
       router.push({ name: "announcements" });
     } else {
       isLoading.value = false;
@@ -219,6 +240,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       selectedData.value?.ID
     );
     if (response) {
+      await newsServices.postEtvTags(dataEvtTags);
+      isLoading.value = false;
       router.push({ name: "announcements" });
     } else {
       isLoading.value = false;
