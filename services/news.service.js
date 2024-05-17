@@ -4,12 +4,26 @@ const toast = useToast();
 
 const getTags = async (nrorg) => {
   const accessToken = localStorage.getItem("authToken");
-  const response = await useFetch(`${apiBaseUrl}/tags?nrorg=${nrorg}`, {
+  const response = await useFetch(`${apiBaseUrl}/tags?nrorg=${nrorg}status=A`, {
     method: "GET",
     headers: {
       Authorization: `${accessToken}`,
     },
   });
+  return response.data.value;
+};
+
+const getMemberGroups = async (nrorg) => {
+  const accessToken = localStorage.getItem("authToken");
+  const response = await useFetch(
+    `${apiBaseUrl}/users/groups?NRORG=${nrorg}&STATUS=A`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `${accessToken}`,
+      },
+    }
+  );
   return response.data.value;
 };
 
@@ -26,7 +40,7 @@ const postNews = async (data) => {
     // console.log("POST", response.data.value);
     toast.add({
       title: "Sucesso",
-      description: "O comunicado foi publicado",
+      description: "O registro foi publicado",
     });
   } else {
     toast.add({
@@ -36,6 +50,30 @@ const postNews = async (data) => {
     });
   }
   return response.data.value;
+};
+
+const postEtvTags = async (data) => {
+  const accessToken = localStorage.getItem("authToken");
+  const response = await useFetch(`${apiBaseUrl}/news/evt-tag-news`, {
+    method: "POST",
+    headers: {
+      Authorization: `${accessToken}`,
+    },
+    body: data,
+  });
+  if (response.data.value) {
+    // toast.add({
+    //   title: "Sucesso",
+    //   description: "O registro foi criado",
+    // });
+    return response.data.value;
+  } else {
+    toast.add({
+      color: "red",
+      title: "Erro",
+      description: "Algo deu errado, por favor, tente mais tarde",
+    });
+  }
 };
 
 const updateNews = async (data, id) => {
@@ -51,7 +89,7 @@ const updateNews = async (data, id) => {
     // console.log("PUT", response.data.value);
     toast.add({
       title: "Sucesso",
-      description: "O comunicado foi alterado",
+      description: "O registro foi alterado",
     });
   } else {
     toast.add({
@@ -110,7 +148,9 @@ const convertToString = (value) => {
 
 export default {
   getTags,
+  getMemberGroups,
   postNews,
+  postEtvTags,
   updateNews,
   updateStatus,
   convertToDate,

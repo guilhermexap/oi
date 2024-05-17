@@ -26,17 +26,17 @@
           </template>
           <template #list>
             <ul class="nav ms-4">
-              <!-- <SidenavItem
-                to="/comunicacoes"
-                mini-icon="C"
-                text="Comunicações"
-              /> -->
               <SidenavItem
                 to="/announcements"
                 mini-icon="C"
                 text="Comunicados"
               />
               <SidenavItem to="/marketing" mini-icon="M" text="Marketing" />
+              <SidenavItem
+                to="/notifications"
+                mini-icon="N"
+                text="Notificações"
+              />
               <!-- <SidenavItem to="/events" mini-icon="E" text="Eventos" /> -->
             </ul>
           </template>
