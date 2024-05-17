@@ -184,7 +184,7 @@ const state = reactive({
   FINAL_DATE:
     newsServices.convertToDate(selectedData.value?.FINAL_DATE?.toString()) ||
     undefined,
-  NEWS: selectedData.value?.GEN_NEWS as string | undefined,
+  NEWS: selectedData.value?.NEWS as string | undefined,
   IMAGE: selectedData.value?.IMAGE as string | undefined,
   ACTIVE:
     newsServices.convertToBoolean(selectedData.value?.ACTIVE?.toString()) ||
@@ -203,7 +203,6 @@ onMounted(async () => {
     }));
   }
   if (selectedData.value && selectedData.value.evt_tag_news.length > 0) {
-    console.log("HREE");
     for (let i = 0; i < selectedData.value.evt_tag_news.length; i++) {
       selected.value.push(selectedData.value.evt_tag_news[i].EVT_TAG_ID);
     }
