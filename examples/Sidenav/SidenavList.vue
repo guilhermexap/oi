@@ -133,37 +133,77 @@
           </template>
           <template #list>
             <ul class="nav ms-4">
+              <sidenav-collapse
+                collapse-ref="apiExamples"
+                nav-text="Espaços"
+                :class="getRoute === 'examples' ? 'active' : ''"
+              >
+                <template #icon>
+                  <i class="fab fa-vuejs text-success text-sm opacity-10"></i>
+                </template>
+                <template #list>
+                  <ul class="nav ms-4">
+                    <SidenavItem
+                      to="/services/spaces"
+                      mini-icon="E"
+                      text="Espaços"
+                    />
+                    <!-- <SidenavItem
+                      to="/services/professional-reservation"
+                      mini-icon="R"
+                      text="Reserva de Profissionais"
+                    /> -->
+                    <SidenavItem
+                      to="/services/space-reservation"
+                      mini-icon="R"
+                      text="Reserva de Espaços"
+                    />
+                  </ul>
+                </template>
+              </sidenav-collapse>
+              <sidenav-collapse
+                collapse-ref="apiExamples"
+                nav-text="Agenda"
+                :class="getRoute === 'examples' ? 'active' : ''"
+              >
+                <template #icon>
+                  <i class="fab fa-vuejs text-success text-sm opacity-10"></i>
+                </template>
+                <template #list>
+                  <ul class="nav ms-4">
+                    <SidenavItem
+                      to="/services/schedule"
+                      mini-icon="A"
+                      text="Agenda"
+                    />
+                    <SidenavItem
+                      to="/services/schedule/operational"
+                      mini-icon="O"
+                      text="Operacional"
+                    />
+                  </ul>
+                </template>
+              </sidenav-collapse>
               <SidenavItem
                 to="/services/timesheet"
                 mini-icon="Q"
                 text="Quadro de Horários"
               />
-              <SidenavItem
+              <!-- <SidenavItem
                 to="/services/space-reservation"
                 mini-icon="R"
                 text="Reserva de Espaços"
-              />
+              />-->
               <SidenavItem
                 to="/services/professional-reservation"
                 mini-icon="R"
                 text="Reserva de Profissionais"
               />
 
-              <SidenavItem to="/services/spaces" mini-icon="E" text="Espaços" />
               <SidenavItem
                 to="/services/appmenu"
                 mini-icon="M"
                 text="Montagem menu serviços app"
-              />
-              <SidenavItem
-                to="/services/schedule"
-                mini-icon="A"
-                text="Agenda"
-              />
-              <SidenavItem
-                to="/services/schedule/operational"
-                mini-icon="O"
-                text="Operacional"
               />
             </ul>
           </template>
