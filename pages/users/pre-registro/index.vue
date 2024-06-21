@@ -15,6 +15,10 @@
         </div>
       </UModal>
 
+      <UModal v-model="isOpenCreateFile">
+        <ExcelUploader @submit-success-form="handleFormSubmit" />
+      </UModal>
+
       <UModal v-model="isOpenCreate">
         <pre-register-form
           :row-edit-data="rowEditData"
@@ -29,15 +33,20 @@
             Pré-registro
           </h5>
         </div>
+        <div class="flex gap-4">
+          <UButton color="primary" @click="openNewOnFile"
+            >Adicionar por arquivo
+          </UButton>
 
-        <UButton
-          type="submit"
-          color="primary"
-          size="xl"
-          class="mr-2"
-          @click="openNew"
-          >Adicionar pré-registro
-        </UButton>
+          <UButton
+            type="submit"
+            color="primary"
+            size="xl"
+            class="mr-2"
+            @click="openNew"
+            >Adicionar pré-registro
+          </UButton>
+        </div>
       </div>
 
       <!-- Filters -->
@@ -138,6 +147,7 @@ const apiBaseUrl = runtimeConfig.public.apiBaseUrl;
 // const router = useRouter();
 const isOpen = ref(false);
 const isOpenCreate = ref(false);
+const isOpenCreateFile = ref(false);
 const isEditing = ref(false);
 const rowData = ref(null);
 const rowEditData = ref(null);
@@ -148,8 +158,14 @@ definePageMeta({
 });
 
 const handleFormSubmit = () => {
+  console.log("handleFormSubmit");
   listen.value++;
   isOpenCreate.value = false;
+  isOpenCreateFile.value = false;
+};
+
+const openNewOnFile = () => {
+  isOpenCreateFile.value = true;
 };
 
 const openNew = () => {
@@ -297,6 +313,9 @@ const pageTo = computed(() =>
 );
 
 const filteredRows = computed(() => {
+  if (!Array.isArray(todos.value)) {
+    return [];
+  }
   pageTotal.value = todos.value.length;
   if (!q.value) {
     return todos.value.slice(
