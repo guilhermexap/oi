@@ -15,6 +15,13 @@ env:
   API_BASE_URL_SCHEDULE: https://testeappbackendlaravel.azurewebsites.net/api/v2
   API_KEY: xOuWgoB1D9suLlfiey63mvsqKgobS/DfLLMQtIjDUhw=
   IS_DEMO: 1
+  FIREBASE_API_KEY: "AIzaSyA74uIIlpIEZMRgb1L7X7fERxuN4G0gH9o"
+  FIREBASE_AUTH_DOMAIN: "xappa-app-abacd.firebaseapp.com"
+  FIREBASE_PROJECT_ID: "xappa-app-abacd"
+  FIREBASE_STORAGE_BUCKET: "xappa-app-abacd.appspot.com"
+  FIREBASE_MESSAGING_SENDER_ID: "444252963533"
+  FIREBASE_APP_ID: "1:444252963533:web:2dd7fd4fb99eff14f81f84"
+  FIREBASE_MEASUREMENT_ID: "G-4HEXK1BHVF"
   
 jobs:
   build_and_deploy_job:
