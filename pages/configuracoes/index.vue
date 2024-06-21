@@ -106,7 +106,7 @@
               </UFormGroup>
             </div>
             <div class="flex flex-col gap-3 p-4 col-span-2">
-              <div
+              <!-- <div
                 class="bg-gray-200 border h-64 flex items-center justify-center rounded-md text-gray-500"
                 :style="{
                   'background-image': `url(${state.LOGO_IMAGE})`,
@@ -116,8 +116,14 @@
                 }"
               >
                 <span v-if="!state.LOGO_IMAGE" class="fa fa-image fa-3x"></span>
-              </div>
-              <UFormGroup label="Logotipo (Url da imagem)" name="LOGO_IMAGE">
+              </div> -->
+              <UFormGroup label="Logotipo">
+                <ImageUploader
+                  :image-url="urlLogo"
+                  @image-uploaded="onLogoUploaded"
+                />
+              </UFormGroup>
+              <!-- <UFormGroup label="Logotipo (Url da imagem)" name="LOGO_IMAGE">
                 <div class="flex gap-2 items-center justify-center">
                   <UInput
                     v-model="state.LOGO_IMAGE"
@@ -132,7 +138,7 @@
                     <i class="fa fa-close p-1"></i>
                   </div>
                 </div>
-              </UFormGroup>
+              </UFormGroup> -->
             </div>
           </div>
 
@@ -179,6 +185,7 @@ const isLoading = ref(false);
 const loading = ref(false);
 const isOpen = ref(false);
 const router = useRouter();
+const urlLogo = ref("");
 
 const options = ref<{ label: string; value: number }[]>([]);
 
@@ -193,6 +200,10 @@ const backPage = () => {
 const closeModal = () => {
   isOpen.value = false;
   localStorage.removeItem("FIRST_TIME");
+};
+
+const onLogoUploaded = (url: any) => {
+  state.LOGO_IMAGE = url;
 };
 
 const schema = object({
@@ -239,6 +250,7 @@ onMounted(async () => {
       state.TYPE = response.TYPE;
 
       state.LOGO_IMAGE = response.gen_configuration.LOGO_IMAGE;
+      urlLogo.value = response.gen_configuration.LOGO_IMAGE;
       state.PRIMARY_COLOR = response.gen_configuration.PRIMARY_COLOR;
       // state.HOST = response.gen_configuration.HOST;
       // state.HOST_PASSWORD = response.gen_configuration.HOST_PASSWORD;
@@ -310,6 +322,10 @@ options.value = [
     label: "Times",
   },
 ];
+
+watchEffect(() => {
+  console.log("state.LOGO-IMAGE", state.LOGO_IMAGE);
+});
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   showError.value = false;
