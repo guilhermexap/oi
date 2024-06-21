@@ -72,7 +72,7 @@
               </div>
             </div>
             <div class="flex flex-col p-4 col-span-2">
-              <div
+              <!-- <div
                 class="bg-gray-200 border h-44 mb-4 mt-2 flex items-center justify-center rounded-md text-gray-500"
                 :style="{
                   'background-image': `url(${state.IMAGE})`,
@@ -82,14 +82,18 @@
                 }"
               >
                 <span v-if="!state.IMAGE" class="fa fa-image fa-3x"></span>
-              </div>
-              <UFormGroup label="Url da imagem" name="IMAGE">
+              </div> -->
+              <UFormGroup label="imagem" name="IMAGE">
                 <div class="flex gap-2 items-center justify-center">
-                  <UInput
+                  <ImageUploader
+                    :image-url="urlLogo"
+                    @image-uploaded="onLogoUploaded"
+                  />
+                  <!-- <UInput
                     v-model="state.IMAGE"
                     :disabled="!!state.ICON"
                     class="flex-grow"
-                  />
+                  /> -->
                   <div
                     v-if="state.IMAGE"
                     class="flex text-red-600 items-center justify-center rounded-sm cursor-pointer hover:text-red-500 transition-opacity"
@@ -249,6 +253,7 @@ let titlePage = "Adicionar";
 const options = ref<{ label: string; value: number }[]>([]);
 const router = useRouter();
 const route = useRoute();
+const urlLogo = ref("");
 
 // NUMERO DO SERVIÇO
 const serviceId = ref(route.query.ID?.toString());
@@ -271,6 +276,10 @@ if (route.query.ID !== undefined) {
 
 const backPage = () => {
   router.push({ name: "services-professional-reservation" });
+};
+
+const onLogoUploaded = (url: string) => {
+  state.IMAGE = url;
 };
 
 const schema = object({
@@ -358,6 +367,7 @@ const state = reactive({
 });
 
 onMounted(async () => {
+  urlLogo.value = route.query.IMAGE as string;
   const response = await services.indexOptions(NrOrg);
 
   if (Array.isArray(response)) {

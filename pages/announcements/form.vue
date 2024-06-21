@@ -90,7 +90,7 @@
               </UFormGroup>
             </div>
             <div class="flex flex-col p-4">
-              <div
+              <!-- <div
                 class="bg-gray-200 border h-72 mb-4 flex items-center justify-center rounded-md text-gray-500"
                 :style="{
                   'background-image': `url(${state.IMAGE})`,
@@ -100,10 +100,14 @@
                 }"
               >
                 <span v-if="!state.IMAGE" class="fa fa-image fa-3x"></span>
-              </div>
-              <UFormGroup label="Url da imagem" name="IMAGE">
+              </div> -->
+              <UFormGroup label="Imagem" name="IMAGE">
                 <div class="flex gap-2 items-center justify-center">
-                  <UInput v-model="state.IMAGE" class="flex-grow relative" />
+                  <ImageUploader
+                    :image-url="state.IMAGE"
+                    @image-uploaded="onLogoUploaded"
+                  />
+                  <!-- <UInput v-model="state.IMAGE" class="flex-grow relative" />
                   <div
                     v-if="state.IMAGE"
                     class="flex text-red-600 items-center bg-white p-1 h-full justify-center rounded-r-md cursor-pointer absolute top-0 right-0 hover:text-red-500 transition-opacity"
@@ -111,7 +115,7 @@
                     @click="state.IMAGE = undefined"
                   >
                     <i class="fa fa-close p-1"></i>
-                  </div>
+                  </div> -->
                 </div>
               </UFormGroup>
             </div>
@@ -140,6 +144,7 @@ const UserId = parseInt(UsrId!);
 const isLoading = ref(false);
 
 const options = ref<{ label: string; value: number }[]>([]);
+const urlLogo = ref("");
 // const route = useRoute();
 
 let titlePage = "Adicionar";
@@ -150,6 +155,10 @@ const selected = ref<number[]>([]);
 definePageMeta({
   middleware: ["auth"],
 });
+
+const onLogoUploaded = (url: any) => {
+  state.IMAGE = url;
+};
 
 // if (selectedData.value?.ID !== undefined) {
 //   titlePage = "Editar";
@@ -194,6 +203,7 @@ const state = reactive({
 });
 
 onMounted(async () => {
+  urlLogo.value = selectedData.value?.IMAGE;
   const response = await newsServices.getTags(NrOrg);
 
   if (Array.isArray(response)) {

@@ -103,6 +103,7 @@ watch(
 );
 const loadPreviewImage = (url) => {
   // Cria um objeto de arquivo simulado para adicionar ao FilePond
+  if (!url) return;
   const filename = url.substring(url.lastIndexOf("/") + 1);
   fetch(url)
     .then((res) => res.blob())

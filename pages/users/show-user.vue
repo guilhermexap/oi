@@ -94,7 +94,7 @@
               </div>
             </div>
             <div class="flex flex-col p-4 col-span-2">
-              <div
+              <!-- <div
                 class="bg-gray-200 border h-80 mb-4 mt-2 flex items-center justify-center rounded-md text-gray-500"
                 :style="{
                   'background-image': `url(${state.IMAGE})`,
@@ -104,9 +104,13 @@
                 }"
               >
                 <span v-if="!state.IMAGE" class="fa fa-image fa-3x"></span>
-              </div>
-              <UFormGroup label="Url da imagem" name="IMAGE">
-                <div class="flex gap-2 items-center justify-center">
+              </div> -->
+              <UFormGroup label="Imagem" name="IMAGE">
+                <ImageUploader
+                  :image-url="urlLogo"
+                  @image-uploaded="onLogoUploaded"
+                />
+                <!-- <div class="flex gap-2 items-center justify-center">
                   <UInput v-model="state.IMAGE" class="w-full" />
                   <div
                     v-if="state.IMAGE"
@@ -116,7 +120,7 @@
                   >
                     <i class="fa fa-close p-1"></i>
                   </div>
-                </div>
+                </div> -->
               </UFormGroup>
             </div>
           </div>
@@ -212,6 +216,7 @@ const UsrId = localStorage.getItem("userId");
 const NrOrg = parseInt(NumberOrg!);
 const UserId = parseInt(UsrId!);
 const isLoading = ref(false);
+const urlLogo = ref("");
 
 const UserTypeOptions = ref<{ label: string; value: number }[]>([]);
 const GenderOptions = ref<{ label: string; value: string }[]>([]);
@@ -236,6 +241,10 @@ const backPage = () => {
   } else {
     navigateTo("/users/follower-users");
   }
+};
+
+const onLogoUploaded = (url: any) => {
+  state.IMAGE = url;
 };
 
 const schema = object({
@@ -307,6 +316,7 @@ onMounted(async () => {
 
     user.value = rsp;
   });
+  urlLogo.value = user.value.IMAGE;
 
   state.FIRST_NAME = user.value.FIRST_NAME;
   state.LAST_NAME = user.value.LAST_NAME;
@@ -322,7 +332,7 @@ onMounted(async () => {
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   user.value.FIRST_NAME = event.data.FIRST_NAME;
   user.value.LAST_NAME = event.data.LAST_NAME;
-  user.value.IMAGE = event.data.IMAGE;
+  // user.value.IMAGE = event.data.IMAGE;
   user.value.GROUP.GEN_USER_GROUP_ID = event.data.GEN_USER_GROUP_ID;
   user.value.GENDER = event.data.GENDER;
   user.value.BIRTH_DATE = event.data.BIRTH_DATE;

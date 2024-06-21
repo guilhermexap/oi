@@ -99,7 +99,7 @@
               </UFormGroup>
             </div>
             <div class="flex flex-col p-4">
-              <div
+              <!-- <div
                 class="bg-gray-200 border h-80 mb-4 mt-2 flex items-center justify-center rounded-md text-gray-500"
                 :style="{
                   'background-image': `url(${state.IMAGE})`,
@@ -109,9 +109,13 @@
                 }"
               >
                 <span v-if="!state.IMAGE" class="fa fa-image fa-3x"></span>
-              </div>
-              <UFormGroup label="Url da imagem" name="IMAGE">
-                <div class="flex gap-2 items-center justify-center">
+              </div> -->
+              <UFormGroup label="Imagem" name="IMAGE">
+                <ImageUploader
+                  :image-url="urlLogo"
+                  @image-uploaded="onLogoUploaded"
+                />
+                <!-- <div class="flex gap-2 items-center justify-center">
                   <UInput v-model="state.IMAGE" class="flex-grow relative" />
                   <div
                     v-if="state.IMAGE"
@@ -121,7 +125,7 @@
                   >
                     <i class="fa fa-close p-1"></i>
                   </div>
-                </div>
+                </div> -->
               </UFormGroup>
             </div>
           </div>
@@ -145,6 +149,7 @@ const isLoading = ref(false);
 const selectedData = ref<any>(getSelectedData());
 const selected = ref<number[]>([]);
 const options = ref<{ label: string; value: number }[]>([]);
+const urlLogo = ref("");
 // const route = useRoute();
 
 let titlePage = "Adicionar";
@@ -164,6 +169,10 @@ if (selectedData.value?.ID) {
 const router = useRouter();
 const backPage = () => {
   router.push({ name: "marketing" });
+};
+
+const onLogoUploaded = (url: string) => {
+  state.IMAGE = url;
 };
 
 const schema = object({
@@ -202,6 +211,7 @@ const state = reactive({
 
 onMounted(async () => {
   const response = await newsServices.getTags(NrOrg); // MUDAR SERVICE
+  urlLogo.value = selectedData.value?.IMAGE;
 
   if (Array.isArray(response)) {
     options.value = response.map(({ NAME, ID }) => ({

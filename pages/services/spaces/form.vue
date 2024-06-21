@@ -73,8 +73,8 @@
               </div>
             </div>
 
-            <div class="flex flex-col justify-end mb-4 col-span-2">
-              <div
+            <div class="flex flex-col justify-between mb-4 col-span-2">
+              <!-- <div
                 class="bg-gray-200 border h-60 mb-4 mt-2 flex items-center justify-center rounded-md text-gray-500"
                 :style="{
                   'background-image': `url(${state.IMAGE})`,
@@ -84,9 +84,13 @@
                 }"
               >
                 <span v-if="!state.IMAGE" class="fa fa-image fa-3x"></span>
-              </div>
+              </div> -->
               <UFormGroup label="Url da imagem" name="IMAGE">
-                <UInput v-model="state.IMAGE" />
+                <ImageUploader
+                  :image-url="urlLogo"
+                  @image-uploaded="onLogoUploaded"
+                />
+                <!-- <UInput v-model="state.IMAGE" /> -->
               </UFormGroup>
 
               <UFormGroup label="Código QR" name="EXTERNAL_QRCODE" class="mt-4">
@@ -121,6 +125,7 @@ const UserId = parseInt(UsrId!);
 const isLoading = ref(false);
 const route = useRoute();
 const router = useRouter();
+const urlLogo = ref("");
 const options = ref<{ label: string; value: number }[]>([]);
 let titlePage = "Adicionar";
 
@@ -131,6 +136,10 @@ definePageMeta({
 if (route.query.ID !== undefined) {
   titlePage = "Editar";
 }
+
+const onLogoUploaded = (url: string) => {
+  state.IMAGE = url;
+};
 
 const schema = object({
   NAME: string().required("O nome deve ser preenchido"),
@@ -166,6 +175,7 @@ const backPage = () => {
 };
 
 onMounted(async () => {
+  urlLogo.value = route.query.IMAGE as string;
   const response = await spacesServices.indexOptions(NrOrg);
 
   if (Array.isArray(response)) {

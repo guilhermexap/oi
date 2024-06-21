@@ -143,7 +143,7 @@
               </UFormGroup>
             </div>
             <div class="flex flex-col p-4">
-              <div
+              <!-- <div
                 class="bg-gray-200 border h-80 mb-4 mt-2 flex items-center justify-center rounded-md text-gray-500"
                 :style="{
                   'background-image': `url(${state.IMAGE_COVER})`,
@@ -155,10 +155,14 @@
                 <span
                   v-if="!state.IMAGE_COVER"
                   class="fa fa-image fa-3x"
-                ></span>
-              </div>
-              <UFormGroup label="Url da imagem" name="IMAGE_COVER">
-                <div class="flex gap-2 items-center justify-center">
+                ></span> 
+              </div>-->
+              <UFormGroup label="Imagem" name="IMAGE_COVER">
+                <ImageUploader
+                  :image-url="urlLogo"
+                  @image-uploaded="onLogoUploaded"
+                />
+                <!-- <div class="flex gap-2 items-center justify-center">
                   <UInput
                     v-model="state.IMAGE_COVER"
                     class="flex-grow relative"
@@ -171,7 +175,7 @@
                   >
                     <i class="fa fa-close p-1"></i>
                   </div>
-                </div>
+                </div> -->
               </UFormGroup>
             </div>
           </div>
@@ -244,6 +248,7 @@ const optionsCategory = ref<{ label: string; value: number }[]>([]);
 const optionsStructure = ref<{ label: string; value: number }[]>([]);
 const selected = ref<number[]>([]);
 const eventId = selectedData.value?.ID.toString() || "";
+const urlLogo = ref("");
 
 let titlePage = "Adicionar";
 
@@ -267,6 +272,10 @@ if (selectedData.value?.ID) {
 const router = useRouter();
 const backPage = () => {
   router.push({ name: "events" });
+};
+
+const onLogoUploaded = (url: any) => {
+  state.IMAGE_COVER = url;
 };
 
 const schema = object({
@@ -321,6 +330,7 @@ const optionsSales = [
 ];
 
 async function fetchData() {
+  urlLogo.value = selectedData.value?.IMAGE_COVER;
   const response = await newsServices.getTags(NrOrg); // MUDAR SERVICE
   const responseCategories = await eventService.indexCategories(NrOrg);
   const responseStructure = await services.indexStructure(NrOrg);

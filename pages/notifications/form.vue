@@ -100,7 +100,7 @@
               </UFormGroup>
             </div>
             <div class="flex flex-col p-4">
-              <div
+              <!-- <div
                 class="bg-gray-200 border h-72 mb-4 flex items-center justify-center rounded-md text-gray-500"
                 :style="{
                   'background-image': `url(${state.IMAGE})`,
@@ -110,9 +110,13 @@
                 }"
               >
                 <span v-if="!state.IMAGE" class="fa fa-image fa-3x"></span>
-              </div>
+              </div> -->
               <UFormGroup label="Url da imagem" name="IMAGE">
-                <div class="flex gap-2 items-center justify-center">
+                <ImageUploader
+                  :image-url="urlLogo"
+                  @image-uploaded="onLogoUploaded"
+                />
+                <!-- <div class="flex gap-2 items-center justify-center">
                   <UInput v-model="state.IMAGE" class="flex-grow relative" />
                   <div
                     v-if="state.IMAGE"
@@ -122,7 +126,7 @@
                   >
                     <i class="fa fa-close p-1"></i>
                   </div>
-                </div>
+                </div> -->
               </UFormGroup>
             </div>
           </div>
@@ -148,6 +152,7 @@ const UsrId = localStorage.getItem("userId");
 const NrOrg = parseInt(NumberOrg!);
 const UserId = parseInt(UsrId!);
 const isLoading = ref(false);
+const urlLogo = ref("");
 
 const options = ref<{ label: string; value: number }[]>([]);
 const optionsGroups = ref<{ label: string; value: number }[]>([]);
@@ -184,6 +189,10 @@ const schema = object({
 
 type Schema = InferType<typeof schema>;
 
+const onLogoUploaded = (url: string) => {
+  state.IMAGE = url;
+};
+
 const state = reactive({
   TITLE: selectedData.value?.TITLE as string | undefined,
   GEN_TAG_ID: selectedData.value?.GEN_TAG_ID as string | undefined,
@@ -206,6 +215,7 @@ const state = reactive({
 });
 
 onMounted(async () => {
+  urlLogo.value = selectedData.value?.IMAGE;
   const response = await newsServices.getTags(NrOrg);
   const responseGroups = await newsServices.getMemberGroups(NrOrg);
 

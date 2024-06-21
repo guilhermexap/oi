@@ -121,7 +121,7 @@
             </div>
 
             <div class="flex flex-col justify-end mb-4 col-span-2">
-              <div
+              <!-- <div
                 class="bg-gray-200 border h-60 mb-4 mt-2 flex items-center justify-center rounded-md text-gray-500"
                 :style="{
                   'background-image': `url(${state.IMAGE})`,
@@ -131,14 +131,18 @@
                 }"
               >
                 <span v-if="!state.IMAGE" class="fa fa-image fa-3x"></span>
-              </div>
+              </div> -->
               <UFormGroup label="Url da imagem" name="IMAGE">
                 <div class="flex gap-2 items-center justify-center">
-                  <UInput
+                  <ImageUploader
+                    :image-url="urlLogo"
+                    @image-uploaded="onLogoUploaded"
+                  />
+                  <!-- <UInput
                     v-model="state.IMAGE"
                     :disabled="!!state.ICON"
                     class="flex-grow"
-                  />
+                  /> -->
                   <div
                     v-if="state.IMAGE"
                     class="flex text-red-600 items-center justify-center rounded-sm cursor-pointer hover:text-red-500 transition-opacity"
@@ -203,6 +207,7 @@ const showError = ref();
 const showError2 = ref();
 const route = useRoute();
 const router = useRouter();
+const urlLogo = ref("");
 const options = ref<
   { label: string; value: number; disabled: boolean; type: string }[]
 >([]);
@@ -216,6 +221,10 @@ definePageMeta({
 if (selectedData.value?.ID) {
   titlePage = "Editar";
 }
+
+const onLogoUploaded = (url: any) => {
+  state.IMAGE = url;
+};
 
 const schema = object({
   NAME: string().required("O nome deve ser preenchido"),
@@ -342,6 +351,7 @@ const fetchOptions = async () => {
 };
 
 onMounted(() => {
+  urlLogo.value = route.query.IMAGE as string;
   fetchOptions();
 });
 
